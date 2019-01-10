@@ -1,10 +1,25 @@
 package com.stackroute.keepnote.controller;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.stackroute.keepnote.dao.NoteDAO;
+import com.stackroute.keepnote.model.Note;
+
 /*
  * Annotate the class with @Controller annotation.@Controller annotation is used to mark 
  * any POJO class as a controller so that Spring can recognize this class as a Controller
  */
-
+@Controller
 public class NoteController {
 	/*
 	 * From the problem statement, we can understand that the application requires
@@ -23,12 +38,30 @@ public class NoteController {
 	 * Create a Note object.
 	 * 
 	 */
+	
+	public NoteController(NoteDAO noteDao)
+	{
+		
+	}
+	@Autowired
+	private NoteDAO noteDao;
+	
 
 	/*
 	 * Define a handler method to read the existing notes from the database and add
 	 * it to the ModelMap which is an implementation of Map, used when building
 	 * model data for use with views. it should map to the default URL i.e. "/index"
 	 */
+	@GetMapping("/")
+	public ModelAndView getAllNotes()
+	{
+		System.out.println("inside getAllNotes");
+		ModelAndView modelView = new ModelAndView("index");
+		List<Note> noteList = noteDao.getAllNotes();
+		System.out.println("noteList in controller: "+noteList.size());
+		modelView.addObject("notes", noteList);
+		return modelView;
+	}
 
 	/*
 	 * Define a handler method which will read the NoteTitle, NoteContent,
@@ -40,16 +73,82 @@ public class NoteController {
 	 * back to the view using ModelMap This handler method should map to the URL
 	 * "/add".
 	 */
+	@PostMapping("/add")
+	public ModelAndView addNote(@RequestParam("noteId") int noteId,@RequestParam("noteTitle") String noteTitle,
+			@RequestParam("noteContent") String noteContent,@RequestParam("noteStatus") String noteStatus)
+	{
+		System.out.println("inside addNote");
+		ModelAndView modelView = new ModelAndView();
+		modelView.setViewName("redirect:/");
+		Note note = new Note();
+		note.setNoteId(noteId);
+		note.setNoteContent(noteContent);
+		note.setNoteStatus(noteStatus);
+		note.setNoteTitle(noteTitle);
+		note.setCreatedAt(LocalDateTime.now());
+		List<Note> noteList = noteDao.getAllNotes();
+		if(StringUtils.isEmpty(noteId) ||StringUtils.isEmpty(noteTitle) ||
+				StringUtils.isEmpty(noteContent) 
+						|| StringUtils.isEmpty(noteStatus))
+		{
+			modelView.addObject("notes", noteList);
+			modelView.setViewName("index");
+		}
+		if(noteDao.saveNote(note))
+		{
+			modelView.addObject("notes", noteList);
+		}else
+		{
+			System.out.println("noteList in controller addNote Method: "+noteList.size());
+			modelView.addObject("notes", noteList);
+		}
+		return modelView;
+	}
 
 	/*
 	 * Define a handler method which will read the NoteId from request parameters
 	 * and remove an existing note by calling the deleteNote() method of the
 	 * NoteRepository class.This handler method should map to the URL "/delete".
 	 */
+	@GetMapping("/delete")
+	public ModelAndView deleteNote(@RequestParam("noteId") int noteId)
+	{
+		System.out.println("inside deleteNote");
+		ModelAndView modelView = new ModelAndView();
+		modelView.setViewName("redirect:/");
+		boolean deleteSuccess = noteDao.deleteNote(noteId);
+		if(deleteSuccess)
+		{
+			System.out.println("note successfully deleted");
+			return modelView;
+		}
+		return modelView;
+	}
 
 	/*
 	 * Define a handler method which will update the existing note. This handler
 	 * method should map to the URL "/update".
 	 */
+	@PostMapping("/update")
+	public ModelAndView updateNote(@RequestParam("noteId") int noteId,@RequestParam("noteTitle") String noteTitle,
+			@RequestParam("noteContent") String noteContent,@RequestParam("noteStatus") String noteStatus)
+	{
+		System.out.println("inside updateNote");
+		ModelAndView modelView = new ModelAndView();
+		modelView.setViewName("redirect:/");
+		Note note = new Note();
+		note.setNoteId(noteId);
+		note.setNoteContent(noteContent);
+		note.setNoteStatus(noteStatus);
+		note.setNoteTitle(noteTitle);
+		note.setCreatedAt(LocalDateTime.now());
+		if(noteDao.UpdateNote(note))
+		{
+			modelView.addObject("notes", noteDao.getAllNotes());
+			
+			return modelView;
+		}
+		return modelView;
+	}
 
 }

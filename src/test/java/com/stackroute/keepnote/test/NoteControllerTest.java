@@ -48,6 +48,7 @@ public class NoteControllerTest {
 	@Before
 	public void setUp() throws Exception {
 		noteController = new NoteController(noteDao);
+		//noteController = new NoteController();
 		MockitoAnnotations.initMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(this.noteController).build();
 		

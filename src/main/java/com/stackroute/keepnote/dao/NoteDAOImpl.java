@@ -2,7 +2,14 @@ package com.stackroute.keepnote.dao;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.hibernate.criterion.Restrictions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
 import com.stackroute.keepnote.model.Note;
 
@@ -15,7 +22,8 @@ import com.stackroute.keepnote.model.Note;
  * 					transaction. The database transaction happens inside the scope of a persistence 
  * 					context.  
  * */
-
+@Repository
+@Transactional
 public class NoteDAOImpl implements NoteDAO {
 
 	/*
@@ -26,13 +34,26 @@ public class NoteDAOImpl implements NoteDAO {
 
 	}
 
+	@Autowired
+	SessionFactory sessionFactory;
+	
+	Session getSession()
+	{
+		return sessionFactory.getCurrentSession();
+	}
+	
 	/*
 	 * Save the note in the database(note) table.
 	 */
 
 	public boolean saveNote(Note note) {
+		try {
+			getSession().save(note);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return false;
-
 	}
 
 	/*
@@ -40,32 +61,55 @@ public class NoteDAOImpl implements NoteDAO {
 	 */
 
 	public boolean deleteNote(int noteId) {
-		return false;
-
+		
+		try {
+			Note note = new Note();
+			note.setNoteId(noteId);
+			getSession().delete(note);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+			return false;
 	}
 
 	/*
 	 * retrieve all existing notes sorted by created Date in descending
 	 * order(showing latest note first)
-	 */
+	 */ 
 	public List<Note> getAllNotes() {
-		return null;
-
+		
+		List<Note> noteList = getSession().createQuery("from Note").list();
+		if(noteList!=null)
+		{
+			System.out.println("noteList size: "+noteList);
+		}
+		return noteList;
 	}
 
 	/*
 	 * retrieve specific note from the database(note) table
 	 */
 	public Note getNoteById(int noteId) {
-		return null;
+		List<Note> noteList = getSession().createCriteria(Note.class).
+											add(Restrictions.idEq(noteId)).list();
 
+		if (noteList != null && !noteList.isEmpty()) {
+			return (Note) noteList.get(0);
+		}
+		return null;
 	}
 
 	/* Update existing note */
 
 	public boolean UpdateNote(Note note) {
+		try {
+			getSession().saveOrUpdate(note);
+			return true;
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		return false;
-
 	}
 
 }
