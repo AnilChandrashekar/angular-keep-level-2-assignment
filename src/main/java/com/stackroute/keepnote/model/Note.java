@@ -37,6 +37,11 @@ public class Note {
 	}
 
 	public Note(int i, String string, String string2, String string3, LocalDateTime localDate) {
+		this.noteId = i;
+		this.noteStatus = string3;
+		this.noteTitle = string;
+		this.noteContent = string2;
+		this.createdAt = localDate;
 	}
 
 	public int getNoteId() {

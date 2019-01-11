@@ -12,17 +12,11 @@
 	<!-- Create a form which will have text boxes for Note title, content and status along with a Add 
 		 button. Handle errors like empty fields.  (Use dropdown-list for NoteStatus) -->
 		  <h1> Add a note.</h1>
-		 <label id="errMsg" style="color:red;"></label>
+		 <label id="errMsg"  style="color:red;"></label>
 		 <form action="add" method="post" name="noteForm" id="noteForm">
 		  <table style="border: 1px solid;">
-		<tr><td>**Note ID   : <input type="text" id="noteId" name="noteId"></td></tr>
 		<tr><td>**Note Title  : <input type="text" id="noteTitle" name="noteTitle"></td></tr>
-		<tr><td>**Note Status : <select>
- 		 		<option value="not-started">Not Started</option>
- 			 	<option value="started">Started</option>
-  				<option value="in-progress">In Progress</option>
-  				<option value="completed">Completed</option>
-		</select></td></tr>
+		<tr><td>**Note Status : <input type="text" id="noteStatus" name="noteStatus"></td></tr>
 		<tr><td>**Note Content: <textarea id="noteContent" name="noteContent" rows="2" cols="20"></textarea></td></tr>
 		<tr><td> 
 		<input type="button" name="noteButton" id="noteButton" value="submit" onclick="return validation();">
@@ -42,15 +36,20 @@
          <th><c:out value="Note Content"/></th>
          <th><c:out value="Note Created At"/></th>
          <th><c:out value="Delete"/></th>
+         <th><c:out value="Update"/></th>
       </tr>
 	<c:forEach items="${notes}" var="note"> 
       <tr class="">
-         <td><c:out value="${note.noteId}"/></td>
-         <td><c:out value="${note.noteTitle}"/></td>
-         <td><c:out value="${note.noteStatus}"/></td>
-         <td><c:out value="${note.noteContent}"/></td>
+         <td><input type="text" id="noteId" name="noteId" value="${note.noteId}"> </td>
+         <td><input type="text" id="noteTitle" name="noteTitle" value="${note.noteTitle}"></td>
+         <td><input type="text" id="noteStatus" name="noteStatus" value="${note.noteStatus}"></td>
+         <td><input type="text" id="noteContent" name="noteContent" value="${note.noteContent}"></td>
          <td><c:out value="${note.createdAt}"/></td>
-          <td><a href="delete?noteId=${note.noteId}" onclick="document.getElementById("deleteForm").submit()">delete</a></td>
+         <td><a href="delete?noteId=${note.noteId}" onclick="document.getElementById("deleteForm").submit()">delete</a></td>
+         <td>
+         <!-- <input type="button" name="updateButton" id="updateButton" value="update" 	formmethod="post" formaction="update"> -->
+         <button type="submit" formmethod="post"  formaction="update" >update</button>
+         </td>
       </tr>
     </c:forEach>
     </table>
@@ -58,18 +57,22 @@
 </body>
 <script type="text/javascript">
 
-	function validation() {
-		let id = document.getElementById("noteId").value;
+	function validation() 
+	{
 		let title = document.getElementById("noteTitle").value;
 		let status = document.getElementById("noteStatus").value;
 		let content = document.getElementById("noteContent").value;
 
-		if ((id === '') || (title === '') || (status === '') || (content === '')) {
+		if ((title === '') || (status === '') || (content === '')) {
 			document.getElementById("errMsg").innerHTML = 'All fields are mandatory.';
 			return false;
 		} else {
 			document.getElementById("noteForm").submit();
 		}
+	}
+	function update()
+	{
+		document.getElementById("deleteForm").submit();
 	}
 </script>
 </html>

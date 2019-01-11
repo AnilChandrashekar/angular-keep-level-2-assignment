@@ -74,33 +74,34 @@ public class NoteController {
 	 * "/add".
 	 */
 	@PostMapping("/add")
-	public ModelAndView addNote(@RequestParam("noteId") int noteId,@RequestParam("noteTitle") String noteTitle,
+	public ModelAndView addNote(@RequestParam("noteTitle") String noteTitle,
 			@RequestParam("noteContent") String noteContent,@RequestParam("noteStatus") String noteStatus)
 	{
 		System.out.println("inside addNote");
 		ModelAndView modelView = new ModelAndView();
-		modelView.setViewName("redirect:/");
+		
 		Note note = new Note();
-		note.setNoteId(noteId);
 		note.setNoteContent(noteContent);
 		note.setNoteStatus(noteStatus);
 		note.setNoteTitle(noteTitle);
 		note.setCreatedAt(LocalDateTime.now());
-		List<Note> noteList = noteDao.getAllNotes();
-		if(StringUtils.isEmpty(noteId) ||StringUtils.isEmpty(noteTitle) ||
-				StringUtils.isEmpty(noteContent) 
-						|| StringUtils.isEmpty(noteStatus))
+		try {
+		boolean saveflag =	noteDao.saveNote(note);
+		if(saveflag)
 		{
-			modelView.addObject("notes", noteList);
-			modelView.setViewName("index");
-		}
-		if(noteDao.saveNote(note))
-		{
-			modelView.addObject("notes", noteList);
+			System.out.println("Note saved successfully.");
+			modelView.setViewName("redirect:/");
 		}else
 		{
-			System.out.println("noteList in controller addNote Method: "+noteList.size());
-			modelView.addObject("notes", noteList);
+			System.out.println("Note save not succesful.");
+			modelView.setViewName("index");
+			modelView.addObject("notes", noteDao.getAllNotes());
+		}
+		
+		} catch (Exception e) {
+			System.out.println("exception block : Note save failed.");
+			modelView.setViewName("index");
+			modelView.addObject("notes", noteDao.getAllNotes());
 		}
 		return modelView;
 	}
@@ -134,6 +135,9 @@ public class NoteController {
 			@RequestParam("noteContent") String noteContent,@RequestParam("noteStatus") String noteStatus)
 	{
 		System.out.println("inside updateNote");
+		System.out.println("noteContent: "+noteContent);
+		System.out.println("noteStatus: "+noteStatus);
+		System.out.println("noteTitle: "+noteTitle);
 		ModelAndView modelView = new ModelAndView();
 		modelView.setViewName("redirect:/");
 		Note note = new Note();
@@ -141,6 +145,7 @@ public class NoteController {
 		note.setNoteContent(noteContent);
 		note.setNoteStatus(noteStatus);
 		note.setNoteTitle(noteTitle);
+		
 		note.setCreatedAt(LocalDateTime.now());
 		if(noteDao.UpdateNote(note))
 		{

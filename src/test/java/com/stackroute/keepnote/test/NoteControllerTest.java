@@ -52,10 +52,10 @@ public class NoteControllerTest {
 		MockitoAnnotations.initMocks(this);
 		mockMvc = MockMvcBuilders.standaloneSetup(this.noteController).build();
 		
-		note = new Note(1, "Sample note application", "Testing for NoteController.class", "active", localDate);
-		Note note1 = new Note(1, "Sample note application -1", "Testing for NoteController.class", "active", localDate);
-		Note note2 = new Note(2, "Sample note application-2", "Testing for NoteController.class", "active", localDate);
-		Note note3 = new Note(3, "Sample note application-3", "Testing for NoteController.class", "active", localDate);
+		note = new Note(1, "Sample note application", "1Testing for NoteController.class", "active", localDate);
+		Note note1 = new Note(1, "Sample note application -1", "2Testing for NoteController.class", "active", localDate);
+		Note note2 = new Note(2, "Sample note application-2", "3Testing for NoteController.class", "active", localDate);
+		Note note3 = new Note(3, "Sample note application-3", "4Testing for NoteController.class", "active", localDate);
 		allNotes = Arrays.asList(note1, note2, note3);
 
 	}

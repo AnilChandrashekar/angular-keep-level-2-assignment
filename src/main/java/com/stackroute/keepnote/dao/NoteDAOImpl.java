@@ -1,14 +1,18 @@
 package com.stackroute.keepnote.dao;
 
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.transaction.Transactional;
 
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.criterion.Restrictions;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
 
 import com.stackroute.keepnote.model.Note;
@@ -31,7 +35,7 @@ public class NoteDAOImpl implements NoteDAO {
 	 */
 
 	public NoteDAOImpl(SessionFactory sessionFactory) {
-
+		this.sessionFactory = sessionFactory;
 	}
 
 	@Autowired
@@ -47,13 +51,17 @@ public class NoteDAOImpl implements NoteDAO {
 	 */
 
 	public boolean saveNote(Note note) {
+		System.out.println("saveNote  START:");
+		boolean saveFlag = false;
 		try {
 			getSession().save(note);
-			return true;
-		} catch (Exception e) {
-			e.printStackTrace();
+			saveFlag =true;
+			System.out.println("save flag: "+saveFlag);
+		} 
+		catch (Exception e) {
 		}
-		return false;
+		System.out.println("saveNote  END:");
+		return saveFlag;
 	}
 
 	/*
@@ -63,9 +71,10 @@ public class NoteDAOImpl implements NoteDAO {
 	public boolean deleteNote(int noteId) {
 		
 		try {
-			Note note = new Note();
+			/*Note note = new Note();
 			note.setNoteId(noteId);
-			getSession().delete(note);
+			getSession().delete(note);*/
+			getSession().createQuery("delete from Note where noteId ="+noteId).executeUpdate();
 			return true;
 		} catch (Exception e) {
 			e.printStackTrace();
