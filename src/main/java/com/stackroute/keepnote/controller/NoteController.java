@@ -55,10 +55,10 @@ public class NoteController {
 	@GetMapping("/")
 	public ModelAndView getAllNotes()
 	{
-		System.out.println("inside getAllNotes");
+	// System.out.println("inside getAllNotes");
 		ModelAndView modelView = new ModelAndView("index");
 		List<Note> noteList = noteDao.getAllNotes();
-		System.out.println("noteList in controller: "+noteList.size());
+	// System.out.println("noteList in controller: "+noteList.size());
 		modelView.addObject("notes", noteList);
 		return modelView;
 	}
@@ -77,7 +77,7 @@ public class NoteController {
 	public ModelAndView addNote(@RequestParam("noteTitle") String noteTitle,
 			@RequestParam("noteContent") String noteContent,@RequestParam("noteStatus") String noteStatus)
 	{
-		System.out.println("inside addNote");
+		// System.out.println("inside addNote");
 		ModelAndView modelView = new ModelAndView();
 		
 		Note note = new Note();
@@ -89,17 +89,17 @@ public class NoteController {
 		boolean saveflag =	noteDao.saveNote(note);
 		if(saveflag)
 		{
-			System.out.println("Note saved successfully.");
+			// System.out.println("Note saved successfully.");
 			modelView.setViewName("redirect:/");
 		}else
 		{
-			System.out.println("Note save not succesful.");
+			// System.out.println("Note save not succesful.");
 			modelView.setViewName("index");
 			modelView.addObject("notes", noteDao.getAllNotes());
 		}
 		
 		} catch (Exception e) {
-			System.out.println("exception block : Note save failed.");
+			// System.out.println("exception block : Note save failed.");
 			modelView.setViewName("index");
 			modelView.addObject("notes", noteDao.getAllNotes());
 		}
@@ -114,13 +114,13 @@ public class NoteController {
 	@GetMapping("/delete")
 	public ModelAndView deleteNote(@RequestParam("noteId") int noteId)
 	{
-		System.out.println("inside deleteNote");
+		// System.out.println("inside deleteNote");
 		ModelAndView modelView = new ModelAndView();
 		modelView.setViewName("redirect:/");
 		boolean deleteSuccess = noteDao.deleteNote(noteId);
 		if(deleteSuccess)
 		{
-			System.out.println("note successfully deleted");
+			// System.out.println("note successfully deleted");
 			return modelView;
 		}
 		return modelView;
@@ -134,10 +134,10 @@ public class NoteController {
 	public ModelAndView updateNote(@RequestParam("noteId") int noteId,@RequestParam("noteTitle") String noteTitle,
 			@RequestParam("noteContent") String noteContent,@RequestParam("noteStatus") String noteStatus)
 	{
-		System.out.println("inside updateNote");
+		/*System.out.println("inside updateNote");
 		System.out.println("noteContent: "+noteContent);
 		System.out.println("noteStatus: "+noteStatus);
-		System.out.println("noteTitle: "+noteTitle);
+		System.out.println("noteTitle: "+noteTitle);*/
 		ModelAndView modelView = new ModelAndView();
 		modelView.setViewName("redirect:/");
 		Note note = new Note();

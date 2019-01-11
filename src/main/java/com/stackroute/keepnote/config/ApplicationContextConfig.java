@@ -67,7 +67,7 @@ public class ApplicationContextConfig {
 	      sessionFactory.setDataSource(dataSource());
 	      sessionFactory.setPackagesToScan("com.stackroute.keepnote.model");
 	      sessionFactory.setHibernateProperties(hibernateProperties());
-	      System.out.println("session factory"+sessionFactory);
+	     // System.out.println("session factory"+sessionFactory);
 	      return sessionFactory;
 	   }
 

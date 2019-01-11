@@ -51,16 +51,16 @@ public class NoteDAOImpl implements NoteDAO {
 	 */
 
 	public boolean saveNote(Note note) {
-		System.out.println("saveNote  START:");
+		// System.out.println("saveNote  START:");
 		boolean saveFlag = false;
 		try {
 			getSession().save(note);
 			saveFlag =true;
-			System.out.println("save flag: "+saveFlag);
+		// System.out.println("save flag: "+saveFlag);
 		} 
 		catch (Exception e) {
 		}
-		System.out.println("saveNote  END:");
+		// System.out.println("saveNote  END:");
 		return saveFlag;
 	}
 
@@ -91,7 +91,7 @@ public class NoteDAOImpl implements NoteDAO {
 		List<Note> noteList = getSession().createQuery("from Note").list();
 		if(noteList!=null)
 		{
-			System.out.println("noteList size: "+noteList);
+		// System.out.println("noteList size: "+noteList);
 		}
 		return noteList;
 	}
@@ -116,7 +116,6 @@ public class NoteDAOImpl implements NoteDAO {
 			getSession().saveOrUpdate(note);
 			return true;
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 		return false;
 	}
