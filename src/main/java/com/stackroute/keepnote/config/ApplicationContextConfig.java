@@ -45,7 +45,7 @@ public class ApplicationContextConfig {
 	{
 		BasicDataSource dataSource = new BasicDataSource();
 		/*dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-		dataSource.setUrl("jdbc:mysql://localhost:3306/NoteSchema"
+		dataSource.setUrl("jdbc:mysql://localhost:3306/NoteSchemaTest"
 		+"?verifyServerCertificate=false&useSSL=false&requireSSL=false");
 		dataSource.setUsername("root");
 		dataSource.setPassword("root");*/
@@ -90,8 +90,8 @@ public class ApplicationContextConfig {
 	 */
 	   Properties hibernateProperties() {
 		   Properties properties = new Properties();
-		   properties.setProperty("hibernate.dialect","org.hibernate.dialect.MySQLDialect");
-		   properties.setProperty("hibernate.hbm2ddl.auto","validate");
+		   properties.setProperty("hibernate.dialect","org.hibernate.dialect.MySQL5InnoDBDialect");
+		   properties.setProperty("hibernate.hbm2ddl.auto","create");
 		   properties.setProperty("hibernate.show_sql","true");
 		   properties.setProperty("hibernate.format_sql","true");
 		   return properties;
